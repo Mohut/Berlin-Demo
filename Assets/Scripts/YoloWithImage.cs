@@ -1,59 +1,72 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Unity.Sentis;
 using UnityEngine.UI;
 
-public class YoloWithWebCam : MonoBehaviour
+public class YoloWithImage : MonoBehaviour
 {
     [SerializeField] private ModelAsset modelAsset;
     [SerializeField] private RectTransform boxParent;
     [SerializeField] private RawImage rawImage;
-
     private Worker worker;
     private WebCamTexture webCamTexture;
+    private Tensor<float> inputTensor;
 
+    const int k_LayersPerFrame = 10;
+    IEnumerator m_Schedule;
+    bool m_Started = false;
+    
     private void Start()
     {
+        Application.targetFrameRate = 30;
         // Initialize YOLO model
         Model runtimeModel = ModelLoader.Load(modelAsset);
-        worker = new Worker(runtimeModel, BackendType.GPUCompute);
-
-        // Initialize the webcam
-        webCamTexture = new WebCamTexture();
-        rawImage.texture = webCamTexture;
-        rawImage.material.mainTexture = webCamTexture;
-        
-        // Start the webcam feed
-        webCamTexture.Play();
-
-        Debug.Log("width and height of webcam texture" + " " + webCamTexture.width + " " + webCamTexture.height);
+        worker = new Worker(runtimeModel, BackendType.CPU);
+        inputTensor = new Tensor<float>(new TensorShape(1, 3, 640, 640));
     }
 
     private void Update()
     {
-        // Run inference on each frame from the webcam
-        if (webCamTexture.didUpdateThisFrame)
+        // Convert the webcam frame to Tensor
+        TextureConverter.ToTensor(rawImage.texture, inputTensor, new TextureTransform());   
+        
+        if (!m_Started)
         {
-            //Texture2D resizedTexture = ResizeTexture(webCamTexture, 640, 640);
-
-            // Convert the webcam frame to Tensor
-            Tensor<float> inputTensor = TextureConverter.ToTensor(webCamTexture, width: 640, height: 640, channels: 3 );
-            
-            //inputTensor.Reshape(new TensorShape(1, 3, 640, 640 ));
-
-            // Run the YOLO model on the frame
-            worker.Schedule(inputTensor);
-            Tensor<float> outputTensor = worker.PeekOutput() as Tensor<float>;
-
-            // Process and display the bounding boxes
-            ProcessYoloOutput(outputTensor.ReadbackAndClone());
-
-            Debug.Log(outputTensor.shape);
-            // Clean up
-            outputTensor.Dispose();
-            inputTensor.Dispose();
+            m_Schedule = worker.ScheduleIterable(inputTensor);
+            m_Started = true;
         }
+        
+        int it = 0;
+        while (m_Schedule.MoveNext())
+        {
+            if (++it % k_LayersPerFrame == 0)
+                return;
+        }
+        
+        var outputTensor = worker.PeekOutput() as Tensor<float>;
+        var cpuCopyTensor = outputTensor.ReadbackAndClone();
+        // cpuCopyTensor is a CPU copy of the output tensor. You can access it and modify it
+
+        // Set this flag to false to run the network again
+        m_Started = false;
+        cpuCopyTensor.Dispose();
+        
+        ProcessYoloOutput(outputTensor.ReadbackAndClone());
+        
+        /*
+        // Run the YOLO model on the frame
+        worker.Schedule(inputTensor);
+        Tensor<float> outputTensor = worker.PeekOutput() as Tensor<float>;
+
+        // Process and display the bounding boxes
+        ProcessYoloOutput(outputTensor.ReadbackAndClone());
+        
+        // Clean up
+        outputTensor.Dispose();
+        inputTensor.Dispose();
+        */
     }
 
     private void OnDestroy()
@@ -85,14 +98,14 @@ public class YoloWithWebCam : MonoBehaviour
 
             if (confidence > confidenceThreshold)
             {
-                float x_center = outputTensor[0, 0, i]; // x_center
-                float y_center = outputTensor[0, 1, i]; // y_center
+                float x_center = outputTensor[0, 0, i];  // x_center
+                float y_center = outputTensor[0, 1, i];  // y_center
                 float width = outputTensor[0, 2, i];     // width
                 float height = outputTensor[0, 3, i];    // height
 
                 // Calculate top-left corner
-                float x_min = x_center - (width / 2);
-                float y_min = y_center - (height / 2);
+                float x_min = x_center - (width);
+                float y_min = y_center - (height);
 
                 // Create a bounding box
                 boxes.Add(new Rect(x_min, y_min, width, height));
@@ -113,11 +126,10 @@ public class YoloWithWebCam : MonoBehaviour
         // Draw the bounding boxes
         foreach (int index in selectedIndices)
         {
+            Debug.Log(boxes[index].x + ", " + boxes[index].y + ", " + boxes[index].width + ", " + boxes[index].height);
             DrawBoundingBox(boxes[index], scores[index]);
         }
-
-  
-
+        
         outputTensor.Dispose();
     }
 
@@ -132,7 +144,7 @@ public class YoloWithWebCam : MonoBehaviour
 
         // Set the size and position
         rectTransform.sizeDelta = new Vector2(box.width, box.height);
-        rectTransform.anchoredPosition = new Vector2(box.x, -box.y);
+        rectTransform.anchoredPosition = new Vector2(box.x, box.y);
 
         // Optionally add a UI Image component to visualize the box
         var image = boxObj.AddComponent<Image>();
@@ -187,18 +199,5 @@ public class YoloWithWebCam : MonoBehaviour
         float areaB = boxB.width * boxB.height;
 
         return intersection / (areaA + areaB - intersection);
-    }
-
-    // Example of ResizeTexture function
-    Texture2D ResizeTexture(WebCamTexture source, int newWidth, int newHeight)
-    {
-        Texture2D result = new Texture2D(newWidth, newHeight);
-        RenderTexture rt = RenderTexture.GetTemporary(newWidth, newHeight);
-        Graphics.Blit(source, rt);
-        RenderTexture.active = rt;
-        result.ReadPixels(new Rect(0, 0, newWidth, newHeight), 0, 0);
-        result.Apply();
-        RenderTexture.ReleaseTemporary(rt);
-        return result;
     }
 }
