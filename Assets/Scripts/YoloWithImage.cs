@@ -36,7 +36,7 @@ public class YoloWithImage : MonoBehaviour
         // Initialize YOLO model
         Model runtimeModel = ModelLoader.Load(modelAsset);
 
-        worker = new Worker(runtimeModel, BackendType.GPUPixel);
+        worker = new Worker(runtimeModel, BackendType.CPU);
         inputTensor = new Tensor<float>(new TensorShape(1, 3, 640, 640));
     }
 
