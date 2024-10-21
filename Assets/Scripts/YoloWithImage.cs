@@ -30,10 +30,10 @@ public class YoloWithImage : MonoBehaviour
     
     private void Start()
     {
-      //  rawImage.texture.height = Screen.height;
-      //  rawImage.texture.width = Screen.width;
-        
+        //  rawImage.texture.height = Screen.height;
+        //  rawImage.texture.width = Screen.width;
         // Initialize YOLO model
+        
         Model runtimeModel = ModelLoader.Load(modelAsset);
 
         worker = new Worker(runtimeModel, BackendType.CPU);
@@ -73,18 +73,19 @@ public class YoloWithImage : MonoBehaviour
 
     private void OnDestroy()
     {
-
         inputTensor?.Dispose();
-        
         cpuCopyTensor?.Dispose();
         outputTensor?.Dispose();
-        
-        
         worker?.Dispose();
     }
 
     void ProcessYoloOutput(Tensor<float> outputTensor)
     {
+        boxes.Clear();
+        scores.Clear();
+        classes.Clear();
+        nonMaxSupressionList.Clear();
+        
         float confidenceThreshold = 0.5f;
 
         for (int i = 0; i < 8400; i++)
@@ -124,10 +125,7 @@ public class YoloWithImage : MonoBehaviour
             DrawBoundingBox(boxes[index], scores[index]);
         }
         
-        boxes.Clear();
-        scores.Clear();
-        classes.Clear();
-        nonMaxSupressionList.Clear();
+        
         outputTensor.Dispose();
     }
 
@@ -159,8 +157,11 @@ public class YoloWithImage : MonoBehaviour
         text.color = Color.black;
     }
 
-    private void NonMaxSuppression(List<Rect> boxes, List<float> scores, float iouThreshold, out  List<int> nonMaxSupressionListReference)
+    private void NonMaxSuppression(List<Rect> boxes, List<float> scores, float iouThreshold, out List<int> nonMaxSupressionListReference)
     {
+        selectedIndices.Clear();
+        indices.Clear();
+        
         for (int i = 0; i < boxes.Count; i++)
             indices.Add(i);
 
@@ -182,8 +183,6 @@ public class YoloWithImage : MonoBehaviour
         }
         
         nonMaxSupressionListReference = selectedIndices;
-        selectedIndices.Clear();
-        indices.Clear();
     }
 
     private float CalculateIoU(Rect boxA, Rect boxB)
