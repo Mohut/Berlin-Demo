@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Unity.Sentis;
-using UnityEditor.Rendering;
 using UnityEngine.UI;
 
 public class YoloWithImage : MonoBehaviour
@@ -32,7 +31,7 @@ public class YoloWithImage : MonoBehaviour
     {
         //  rawImage.texture.height = Screen.height;
         //  rawImage.texture.width = Screen.width;
-        // Initialize YOLO model
+        //  Initialize YOLO model
         
         Model runtimeModel = ModelLoader.Load(modelAsset);
 
