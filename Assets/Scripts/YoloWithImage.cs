@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Unity.Sentis;
+using UnityEditor.Rendering;
 using UnityEngine.UI;
 
 public class YoloWithImage : MonoBehaviour
@@ -10,9 +11,18 @@ public class YoloWithImage : MonoBehaviour
     [SerializeField] private ModelAsset modelAsset;
     [SerializeField] private RectTransform boxParent;
     [SerializeField] private RawImage rawImage;
+    
     private Worker worker;
-    private WebCamTexture webCamTexture;
     private Tensor<float> inputTensor;
+    private Tensor<float> outputTensor;
+    private Tensor<float> cpuCopyTensor;
+    
+    List<Rect> boxes = new List<Rect>();
+    List<float> scores = new List<float>();
+    List<float> classes = new List<float>();
+    List<int> selectedIndices = new List<int>();
+    List<int> indices = new List<int>();
+    List<int> nonMaxSupressionList = new List<int>();
 
     const int k_LayersPerFrame = 10;
     IEnumerator m_Schedule;
@@ -20,16 +30,19 @@ public class YoloWithImage : MonoBehaviour
     
     private void Start()
     {
-        Application.targetFrameRate = 30;
+      //  rawImage.texture.height = Screen.height;
+      //  rawImage.texture.width = Screen.width;
+        
         // Initialize YOLO model
         Model runtimeModel = ModelLoader.Load(modelAsset);
-        worker = new Worker(runtimeModel, BackendType.CPU);
+
+        worker = new Worker(runtimeModel, BackendType.GPUPixel);
         inputTensor = new Tensor<float>(new TensorShape(1, 3, 640, 640));
     }
 
     private void Update()
     {
-        // Convert the webcam frame to Tensor
+        // This line
         TextureConverter.ToTensor(rawImage.texture, inputTensor, new TextureTransform());   
         
         if (!m_Started)
@@ -45,51 +58,33 @@ public class YoloWithImage : MonoBehaviour
                 return;
         }
         
-        var outputTensor = worker.PeekOutput() as Tensor<float>;
-        var cpuCopyTensor = outputTensor.ReadbackAndClone();
-        // cpuCopyTensor is a CPU copy of the output tensor. You can access it and modify it
-
-        // Set this flag to false to run the network again
+        // This line
+        outputTensor = worker.PeekOutput() as Tensor<float>;
+        
+        cpuCopyTensor = outputTensor.ReadbackAndClone();
         m_Started = false;
+        
+        ProcessYoloOutput(cpuCopyTensor);
+        
         cpuCopyTensor.Dispose();
-        
-        ProcessYoloOutput(outputTensor.ReadbackAndClone());
-        
-        /*
-        // Run the YOLO model on the frame
-        worker.Schedule(inputTensor);
-        Tensor<float> outputTensor = worker.PeekOutput() as Tensor<float>;
-
-        // Process and display the bounding boxes
-        ProcessYoloOutput(outputTensor.ReadbackAndClone());
-        
-        // Clean up
         outputTensor.Dispose();
         inputTensor.Dispose();
-        */
     }
 
     private void OnDestroy()
     {
-        // Clean up resources when closing the app
-        if (worker != null)
-        {
-            worker.Dispose();
-        }
 
-        if (webCamTexture != null)
-        {
-            webCamTexture.Stop();
-        }
+        inputTensor?.Dispose();
+        
+        cpuCopyTensor?.Dispose();
+        outputTensor?.Dispose();
+        
+        
+        worker?.Dispose();
     }
 
     void ProcessYoloOutput(Tensor<float> outputTensor)
     {
-        // Extract bounding boxes and confidence scores
-        List<Rect> boxes = new List<Rect>();
-        List<float> scores = new List<float>();
-        List<float> classes = new List<float>();
-
         float confidenceThreshold = 0.5f;
 
         for (int i = 0; i < 8400; i++)
@@ -115,7 +110,7 @@ public class YoloWithImage : MonoBehaviour
         }
 
         // Apply Non-Maximum Suppression (NMS)
-        List<int> selectedIndices = NonMaxSuppression(boxes, scores, 0.5f);
+        NonMaxSuppression(boxes, scores, 0.5f, out nonMaxSupressionList);
 
         // Clear previous bounding boxes
         foreach (Transform child in boxParent)
@@ -126,10 +121,13 @@ public class YoloWithImage : MonoBehaviour
         // Draw the bounding boxes
         foreach (int index in selectedIndices)
         {
-            Debug.Log(boxes[index].x + ", " + boxes[index].y + ", " + boxes[index].width + ", " + boxes[index].height);
             DrawBoundingBox(boxes[index], scores[index]);
         }
         
+        boxes.Clear();
+        scores.Clear();
+        classes.Clear();
+        nonMaxSupressionList.Clear();
         outputTensor.Dispose();
     }
 
@@ -161,10 +159,8 @@ public class YoloWithImage : MonoBehaviour
         text.color = Color.black;
     }
 
-    List<int> NonMaxSuppression(List<Rect> boxes, List<float> scores, float iouThreshold)
+    private void NonMaxSuppression(List<Rect> boxes, List<float> scores, float iouThreshold, out  List<int> nonMaxSupressionListReference)
     {
-        List<int> selectedIndices = new List<int>();
-        List<int> indices = new List<int>(boxes.Count);
         for (int i = 0; i < boxes.Count; i++)
             indices.Add(i);
 
@@ -184,7 +180,10 @@ public class YoloWithImage : MonoBehaviour
                     indices.RemoveAt(i);
             }
         }
-        return selectedIndices;
+        
+        nonMaxSupressionListReference = selectedIndices;
+        selectedIndices.Clear();
+        indices.Clear();
     }
 
     private float CalculateIoU(Rect boxA, Rect boxB)
