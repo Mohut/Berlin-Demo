@@ -99,8 +99,8 @@ public class YoloWithImage : MonoBehaviour
                 float height = outputTensor[0, 3, i];    // height
 
                 // Calculate top-left corner
-                float x_min = x_center - (width);
-                float y_min = y_center - (height);
+                float x_min = x_center - (width / 2);
+                float y_min = y_center - (height / 2);
 
                 // Create a bounding box
                 boxes.Add(new Rect(x_min, y_min, width, height));
@@ -130,8 +130,6 @@ public class YoloWithImage : MonoBehaviour
 
     void DrawBoundingBox(Rect box, float score)
     {
-        Debug.Log($"width: {box.width}, height: {box.height}, x: {box.x}, y: {box.y}");
-        
         // Create a GameObject to represent the bounding box
         GameObject boxObj = new GameObject("BoundingBox");
         RectTransform rectTransform = boxObj.AddComponent<RectTransform>();
