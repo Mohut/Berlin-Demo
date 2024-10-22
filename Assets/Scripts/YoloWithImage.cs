@@ -106,6 +106,7 @@ public class YoloWithImage : MonoBehaviour
                 boxes.Add(new Rect(x_min, y_min, width, height));
                 scores.Add(confidence);
                 classes.Add(outputTensor[0, 5, i]);
+                Debug.Log(outputTensor.shape);
             }
         }
 
@@ -124,12 +125,13 @@ public class YoloWithImage : MonoBehaviour
             DrawBoundingBox(boxes[index], scores[index]);
         }
         
-        
         outputTensor.Dispose();
     }
 
     void DrawBoundingBox(Rect box, float score)
     {
+        Debug.Log($"width: {box.width}, height: {box.height}, x: {box.x}, y: {box.y}");
+        
         // Create a GameObject to represent the bounding box
         GameObject boxObj = new GameObject("BoundingBox");
         RectTransform rectTransform = boxObj.AddComponent<RectTransform>();
@@ -138,8 +140,13 @@ public class YoloWithImage : MonoBehaviour
         rectTransform.SetParent(boxParent, false);
 
         // Set the size and position
+        rectTransform.anchorMin = new Vector2(0, 1);
+        rectTransform.anchorMax = new Vector2(0, 1);
+        rectTransform.pivot = new Vector2(0, 1);
+        
+        // Set the size and position
         rectTransform.sizeDelta = new Vector2(box.width, box.height);
-        rectTransform.anchoredPosition = new Vector2(box.x, box.y);
+        rectTransform.anchoredPosition = new Vector2( box.x, - box.y);
 
         // Optionally add a UI Image component to visualize the box
         var image = boxObj.AddComponent<Image>();
