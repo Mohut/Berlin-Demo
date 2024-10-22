@@ -1544,13 +1544,14 @@ GameObject:
   m_Component:
   - component: {fileID: 1550285061}
   - component: {fileID: 1550285060}
+  - component: {fileID: 1550285062}
   m_Layer: 0
   m_Name: YoloWithWebCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1550285060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1582,6 +1583,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1550285062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550285059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6492ac4ced64b8b40a874582a85abaa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modelAsset: {fileID: 5022602860645237092, guid: 1b2ee25b22ae6fc49a6bc59bc28711e0,
+    type: 3}
+  boxParent: {fileID: 1521654453}
+  rawImage: {fileID: 383356629}
 --- !u!1 &1723163752
 GameObject:
   m_ObjectHideFlags: 0
