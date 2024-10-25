@@ -47,7 +47,7 @@ public class PointCloudAnchor : MonoBehaviour
         anchor.transform.position = position;
         if (anchorPrefab != null)
         {
-            Instantiate(anchorPrefab, position, Quaternion.identity);
+            //Instantiate(anchorPrefab, position, Quaternion.identity);
         }
     }
     

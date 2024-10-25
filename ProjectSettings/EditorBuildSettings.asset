@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/ImageAnchorTracking.unity
     guid: 9582e35e73de67f41b9c2e20d4e3ed69
   - enabled: 1
+    path: Assets/Scenes/CubeTracking.unity
+    guid: f7b1c620e46eb8d44b67db14978d8b15
+  - enabled: 1
     path: Assets/Scenes/PointCloudAnchor.unity
     guid: 632829ed12f67244ab50daec4d9f2440
   - enabled: 1
