@@ -6,20 +6,23 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Menu.unity
+    path: Assets/Scenes/Production/Menu.unity
     guid: af498cc20388a1049aa6d44f8b44762b
   - enabled: 1
-    path: Assets/Scenes/ImageAnchorTracking.unity
+    path: Assets/Scenes/Production/ImageAnchorTracking.unity
     guid: 9582e35e73de67f41b9c2e20d4e3ed69
   - enabled: 1
-    path: Assets/Scenes/CubeTracking.unity
-    guid: f7b1c620e46eb8d44b67db14978d8b15
+    path: Assets/Scenes/Production/CubeTracking.unity
+    guid: 7d6b93576cd52924a9591b0bc31a8cba
   - enabled: 1
-    path: Assets/Scenes/PointCloudAnchor.unity
+    path: Assets/Scenes/Production/PointCloud.unity
     guid: 632829ed12f67244ab50daec4d9f2440
   - enabled: 1
-    path: Assets/Scenes/ObjectDetection.unity
+    path: Assets/Scenes/Production/ObjectDetection.unity
     guid: e85f7e625bca9a947a1b5a6c57749c96
+  - enabled: 1
+    path: Assets/Scenes/Production/PointCloudTest.unity
+    guid: 713d4c1452cfbdd47b323fc2810bafe6
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 6ee72d15cf39dd748a13eac57397b9af,
       type: 2}
