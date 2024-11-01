@@ -20,6 +20,4 @@ public class PlaneObjectPlacer : MonoBehaviour
             }
         }
     }
-    
-    Funktioniert so semi gut
 }
