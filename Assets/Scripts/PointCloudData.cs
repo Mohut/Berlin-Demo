@@ -9,6 +9,7 @@ public class PointCloudData : MonoBehaviour
     [SerializeField] private ARPointCloud pointCloud;
     [SerializeField] private TMP_Text testText;
     [SerializeField] private GameObject cubePrefab;
+    [SerializeField] private GameObject pointCloudCubePrefab;
     private NativeSlice<Vector3> points = new NativeSlice<Vector3>();
     private List<GameObject> cubes = new List<GameObject>();
     
@@ -36,10 +37,13 @@ public class PointCloudData : MonoBehaviour
 
     private void ShootRayCast(Vector3 touchPosition)
     {
-        Debug.logger.Log(touchPosition.ToString());
+        Debug.unityLogger.Log(touchPosition.ToString());
         Physics.Raycast(Camera.main.ScreenPointToRay(touchPosition), out RaycastHit hit);
-        if(hit.collider != null)
+        if (hit.collider != null)
+        {
             Debug.Log(hit.collider.gameObject.name);
+            Instantiate(cubePrefab, hit.point, Quaternion.identity);
+        }
     }
 
     private Vector3 LookForPoint(Vector3 touchPosition)
@@ -75,7 +79,7 @@ public class PointCloudData : MonoBehaviour
 
         foreach (Vector3 point in points)
         {
-            cubes.Add(Instantiate(cubePrefab, point, Quaternion.identity));
+            cubes.Add(Instantiate(pointCloudCubePrefab, point, Quaternion.identity));
         }
     }
 }
