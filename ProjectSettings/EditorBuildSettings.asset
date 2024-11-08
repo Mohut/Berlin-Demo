@@ -16,7 +16,7 @@ EditorBuildSettings:
     guid: 7d6b93576cd52924a9591b0bc31a8cba
   - enabled: 1
     path: Assets/Scenes/Production/PointCloud.unity
-    guid: 632829ed12f67244ab50daec4d9f2440
+    guid: 713d4c1452cfbdd47b323fc2810bafe6
   - enabled: 1
     path: Assets/Scenes/Production/ObjectDetection.unity
     guid: e85f7e625bca9a947a1b5a6c57749c96
@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Production/PlaneDetection.unity
     guid: 81d21f67604113f499f00b318f5fd0bd
+  - enabled: 1
+    path: Assets/Scenes/Production/Vuforia.unity
+    guid: ba7e43460e723c140aec46a6140d9ae6
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 6ee72d15cf39dd748a13eac57397b9af,
       type: 2}
