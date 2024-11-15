@@ -21,39 +21,39 @@ MonoBehaviour:
       m_GuidLow: 5236056515296273327
       m_GuidHigh: 13637469829100944261
     m_SerializedTextureGuid:
-      m_GuidLow: 14989149732944837089
-      m_GuidHigh: 840093088575768202
-    m_Size: {x: 0.04, y: 0.04}
+      m_GuidLow: 875083328781251897
+      m_GuidHigh: 3371654907534970649
+    m_Size: {x: 0.04, y: 0.039920792}
     m_SpecifySize: 1
     m_Name: qrcode1
-    m_Texture: {fileID: 2800000, guid: 255179e12844d0048ac6d18a369ca80b, type: 3}
+    m_Texture: {fileID: 2800000, guid: b0df7539eba60c24190fd34c4686ca2e, type: 3}
   - m_SerializedGuid:
       m_GuidLow: 5175888334565338183
       m_GuidHigh: 7152609201415882881
     m_SerializedTextureGuid:
-      m_GuidLow: 5216569128862780513
-      m_GuidHigh: 6885045560311042634
-    m_Size: {x: 0.04, y: 0.04}
+      m_GuidLow: 17646265552124426928
+      m_GuidHigh: 11496934418645492651
+    m_Size: {x: 0.04, y: 0.040158413}
     m_SpecifySize: 1
     m_Name: qrcode2
-    m_Texture: {fileID: 2800000, guid: f0228c61f9fb48644a52b86475988c5f, type: 3}
+    m_Texture: {fileID: 2800000, guid: 9696bab02106f4e4aba353bdf0508d9f, type: 3}
   - m_SerializedGuid:
       m_GuidLow: 4965651191974660144
       m_GuidHigh: 15693799037057406142
     m_SerializedTextureGuid:
-      m_GuidLow: 4320119145815007348
-      m_GuidHigh: 6566382914517253851
-    m_Size: {x: 0.04, y: 0.04}
+      m_GuidLow: 9639028875125464203
+      m_GuidHigh: 7211332407843105336
+    m_Size: {x: 0.04, y: 0.04031496}
     m_SpecifySize: 1
     m_Name: qrcode3
-    m_Texture: {fileID: 2800000, guid: 61aae07425793bf4dbbefe76787a205b, type: 3}
+    m_Texture: {fileID: 2800000, guid: 31961c8bb5b185c4382ac01e9ecc1364, type: 3}
   - m_SerializedGuid:
       m_GuidLow: 5378826242185315864
       m_GuidHigh: 3664711904381270944
     m_SerializedTextureGuid:
-      m_GuidLow: 18137197909418485309
-      m_GuidHigh: 16383573662355035881
-    m_Size: {x: 0.04, y: 0.04}
+      m_GuidLow: 3234724804575886094
+      m_GuidHigh: 13287929321947213963
+    m_Size: {x: 0.04, y: 0.040158413}
     m_SpecifySize: 1
     m_Name: qrcode4
-    m_Texture: {fileID: 2800000, guid: 53d8a63d4567fbb4e9161e2871255ee3, type: 3}
+    m_Texture: {fileID: 2800000, guid: 4ae3fb0e0d122ce48b3029db503568b8, type: 3}
