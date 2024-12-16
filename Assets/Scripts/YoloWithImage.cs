@@ -10,6 +10,7 @@ public class YoloWithImage : MonoBehaviour
     [SerializeField] private ModelAsset modelAsset;
     [SerializeField] private RectTransform boxParent;
     [SerializeField] private RawImage rawImage;
+    [SerializeField] private RectTransform boxTransform;
     
     private Worker worker;
     private Tensor<float> inputTensor;
@@ -23,7 +24,7 @@ public class YoloWithImage : MonoBehaviour
     List<int> indices = new List<int>();
     List<int> nonMaxSupressionList = new List<int>();
 
-    const int k_LayersPerFrame = 10;
+    const int k_LayersPerFrame = 20;
     IEnumerator m_Schedule;
     bool m_Started = false;
     
@@ -112,44 +113,49 @@ public class YoloWithImage : MonoBehaviour
 
         // Apply Non-Maximum Suppression (NMS)
         NonMaxSuppression(boxes, scores, 0.5f, out nonMaxSupressionList);
-
+/*
         // Clear previous bounding boxes
         foreach (Transform child in boxParent)
         {
             Destroy(child.gameObject);
         }
-
+ */
         // Draw the bounding boxes
         foreach (int index in selectedIndices)
         {
             DrawBoundingBox(boxes[index], scores[index]);
         }
+       
         
         outputTensor.Dispose();
     }
 
     void DrawBoundingBox(Rect box, float score)
     {
+        /*
         // Create a GameObject to represent the bounding box
         GameObject boxObj = new GameObject("BoundingBox");
         RectTransform rectTransform = boxObj.AddComponent<RectTransform>();
+        */
 
         // Make sure the bounding box is within the canvas space
-        rectTransform.SetParent(boxParent, false);
+        boxTransform.SetParent(boxParent, false);
 
         // Set the size and position
-        rectTransform.anchorMin = new Vector2(0, 1);
-        rectTransform.anchorMax = new Vector2(0, 1);
-        rectTransform.pivot = new Vector2(0, 1);
+        boxTransform.anchorMin = new Vector2(0, 1);
+        boxTransform.anchorMax = new Vector2(0, 1);
+        boxTransform.pivot = new Vector2(0, 1);
         
         // Set the size and position
-        rectTransform.sizeDelta = new Vector2(box.width, box.height);
-        rectTransform.anchoredPosition = new Vector2( box.x, - box.y);
+        boxTransform.sizeDelta = new Vector2(box.width, box.height);
+        boxTransform.anchoredPosition = new Vector2( box.x, - box.y);
 
+        /*
+        
         // Optionally add a UI Image component to visualize the box
         var image = boxObj.AddComponent<Image>();
         image.color = new Color(1, 0, 0, 0.5f); // Semi-transparent red
-
+        
         // Optionally, add a label for the score
         var textObj = new GameObject("ScoreLabel");
         var textTransform = textObj.AddComponent<RectTransform>();
@@ -159,6 +165,7 @@ public class YoloWithImage : MonoBehaviour
         text.text = $"Score: {score:F2}";
         text.fontSize = 14;
         text.color = Color.black;
+        */
     }
 
     private void NonMaxSuppression(List<Rect> boxes, List<float> scores, float iouThreshold, out List<int> nonMaxSupressionListReference)

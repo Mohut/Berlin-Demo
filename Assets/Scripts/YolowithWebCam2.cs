@@ -23,7 +23,7 @@ public class YoloWithWebcam2 : MonoBehaviour
     List<int> indices = new List<int>();
     List<int> nonMaxSupressionList = new List<int>();
 
-    const int k_LayersPerFrame = 10;
+    const int k_LayersPerFrame = 100;
     IEnumerator m_Schedule;
     bool m_Started = false;
 
@@ -31,6 +31,7 @@ public class YoloWithWebcam2 : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = 30;
         // Initialize webcam
         webCamTexture = new WebCamTexture();
         rawImage.texture = webCamTexture;

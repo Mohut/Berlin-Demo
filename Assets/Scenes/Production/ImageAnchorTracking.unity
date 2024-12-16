@@ -1375,7 +1375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackedImageManager: {fileID: 1546445444}
   anchorManager: {fileID: 1546445443}
-  redCubePrefab: {fileID: 5187557560369752263, guid: 530b7371ca7f5194d842cd186747af25,
+  redCubePrefab: {fileID: 6320204873554962410, guid: 9ccf283243588d144a64f7b02772adba,
     type: 3}
   redSpherePrefab: {fileID: 4004085039351286982, guid: ac1a96c7df2d0c04a8479e85e6baa3aa,
     type: 3}
