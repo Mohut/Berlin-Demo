@@ -82,6 +82,7 @@ public class ImageTrackingWithAnchoredObjects : MonoBehaviour
             instantiatedCube.transform.SetParent(cubeAnchor.transform, true); // Attach the cube to the anchor
         }
 
+        
         // Instantiate the spheres at positions relative to the cube and anchor them
         instantiatedSpheres = new GameObject[sphereRelativePositions.Length];
         sphereAnchors = new ARAnchor[sphereRelativePositions.Length];
@@ -98,5 +99,6 @@ public class ImageTrackingWithAnchoredObjects : MonoBehaviour
                 instantiatedSpheres[i].transform.SetParent(cubeAnchor.transform, false);// Attach sphere to its anchor
             }
         }
+        
     }
 }

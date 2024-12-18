@@ -23,9 +23,9 @@ MonoBehaviour:
       m_GuidLow: 5236056515296273327
       m_GuidHigh: 13637469829100944261
     m_SerializedTextureGuid:
-      m_GuidLow: 11381979759061814932
-      m_GuidHigh: 2594952601851949480
-    m_Size: {x: 0.1, y: 0.1}
+      m_GuidLow: 15547622040388637703
+      m_GuidHigh: 4868467909445010937
+    m_Size: {x: 0.14, y: 0.20096202}
     m_SpecifySize: 1
-    m_Name: BigQrCode
-    m_Texture: {fileID: 2800000, guid: 5b90ce94ea499df4a8715c8aa41f0324, type: 3}
+    m_Name: Dog
+    m_Texture: {fileID: 2800000, guid: f36614073fded7c4f9c5dbf6c4459043, type: 3}

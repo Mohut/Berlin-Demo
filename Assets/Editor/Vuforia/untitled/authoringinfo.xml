@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARInfo>
+<TargetSet version="27.0" toolVersion="10.27.3">
+<ModelTarget name="untitled" targetId="7b707839b9384f82a9dd68d0e6b61b41" version="14.0" toolVersion="10.27.3" bbox="-0.030280 -0.030280 -0.030280 0.030280 0.030280 0.030280" previewImage="7b707839b9384f82a9dd68d0e6b61b41_preview.jpg"/>
+
+</TargetSet>
+
+<Assembly name="untitleds_assembly" assemblyId="34efc8a19bc24c17a4910cc73a4e76f4">
+<Part name="untitled" translation="0 0 0" rotation="AD: 0 0 1 0"/>
+<EntryPoint name="GuideView_0000" translation="3.72529e-09 -8.05894e-09 0.262633" rotation="AD: 0.998849 0.131501 -0.413737 212.502" image="untitled_GuideView_0000.png" trained="no">
+
+</EntryPoint>
+
+</Assembly>
+
+</QCARInfo>
