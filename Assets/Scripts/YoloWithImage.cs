@@ -32,7 +32,14 @@ public class YoloWithImage : MonoBehaviour
         //  rawImage.texture.height = Screen.height;
         //  rawImage.texture.width = Screen.width;
         //  Initialize YOLO model
-        
+
+        rawImage.rectTransform.sizeDelta = new Vector2(Screen.width, Screen.height);
+        rawImage.rectTransform.anchorMin = new Vector2(0, 0);
+        rawImage.rectTransform.anchorMax = new Vector2(1, 1);
+        rawImage.rectTransform.offsetMin = Vector2.zero;
+        rawImage.rectTransform.offsetMax = Vector2.zero;
+
+
         Model runtimeModel = ModelLoader.Load(modelAsset);
 
         worker = new Worker(runtimeModel, BackendType.CPU);
@@ -68,6 +75,12 @@ public class YoloWithImage : MonoBehaviour
         cpuCopyTensor.Dispose();
         outputTensor.Dispose();
         inputTensor.Dispose();
+
+
+        if (Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.Portrait)
+        {
+            AdjustAspectRatio();
+        }
     }
 
     private void OnDestroy()
@@ -130,36 +143,40 @@ public class YoloWithImage : MonoBehaviour
 
     void DrawBoundingBox(Rect box, float score)
     {
-        // Create a GameObject to represent the bounding box
+        // Map the bounding box coordinates to the screen space
+        float scaleX = rawImage.rectTransform.rect.width / 640f; // Assuming model input is 640x640
+        float scaleY = rawImage.rectTransform.rect.height / 640f;
+
+        float x = box.x * scaleX;
+        float y = box.y * scaleY;
+        float width = box.width * scaleX;
+        float height = box.height * scaleY;
+
         GameObject boxObj = new GameObject("BoundingBox");
         RectTransform rectTransform = boxObj.AddComponent<RectTransform>();
-
-        // Make sure the bounding box is within the canvas space
         rectTransform.SetParent(boxParent, false);
 
-        // Set the size and position
         rectTransform.anchorMin = new Vector2(0, 1);
         rectTransform.anchorMax = new Vector2(0, 1);
         rectTransform.pivot = new Vector2(0, 1);
-        
-        // Set the size and position
-        rectTransform.sizeDelta = new Vector2(box.width, box.height);
-        rectTransform.anchoredPosition = new Vector2( box.x, - box.y);
 
-        // Optionally add a UI Image component to visualize the box
+        rectTransform.sizeDelta = new Vector2(width, height);
+        rectTransform.anchoredPosition = new Vector2(x, -y);
+
         var image = boxObj.AddComponent<Image>();
-        image.color = new Color(1, 0, 0, 0.5f); // Semi-transparent red
+        image.color = new Color(1, 0, 0, 0.5f);
 
-        // Optionally, add a label for the score
         var textObj = new GameObject("ScoreLabel");
         var textTransform = textObj.AddComponent<RectTransform>();
         textTransform.SetParent(boxParent, false);
-        textTransform.anchoredPosition = rectTransform.anchoredPosition + new Vector2(0, box.height / 2 + 10);
+        textTransform.anchoredPosition = rectTransform.anchoredPosition + new Vector2(0, height / 2 + 10);
+
         var text = textObj.AddComponent<TextMeshProUGUI>();
         text.text = $"Score: {score:F2}";
         text.fontSize = 14;
         text.color = Color.black;
     }
+
 
     private void NonMaxSuppression(List<Rect> boxes, List<float> scores, float iouThreshold, out List<int> nonMaxSupressionListReference)
     {
@@ -202,4 +219,20 @@ public class YoloWithImage : MonoBehaviour
 
         return intersection / (areaA + areaB - intersection);
     }
+
+    void AdjustAspectRatio()
+    {
+        float screenAspect = (float)Screen.width / Screen.height;
+        float inputAspect = 640f / 640f; // YOLO input resolution
+
+        if (screenAspect > inputAspect)
+        {
+            rawImage.rectTransform.sizeDelta = new Vector2(Screen.height * inputAspect, Screen.height);
+        }
+        else
+        {
+            rawImage.rectTransform.sizeDelta = new Vector2(Screen.width, Screen.width / inputAspect);
+        }
+    }
+
 }

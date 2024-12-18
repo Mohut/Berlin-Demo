@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 848409ee8ba454f42a5ddff137688a27, type: 3}
-  m_Name: ImageLibary
+  m_Name: CubeLibary2
   m_EditorClassIdentifier: 
-  m_GuidLow: 4989580940637511594
-  m_GuidHigh: 13951446225671556003
+  m_GuidLow: 4633777238293886092
+  m_GuidHigh: 1065769420175323323
   m_DataStore:
     m_Storage:
     - key: com.unity.xr.arcore
@@ -27,5 +27,5 @@ MonoBehaviour:
       m_GuidHigh: 2594952601851949480
     m_Size: {x: 0.1, y: 0.1}
     m_SpecifySize: 1
-    m_Name: BigQrCode
+    m_Name: bild1
     m_Texture: {fileID: 2800000, guid: 5b90ce94ea499df4a8715c8aa41f0324, type: 3}

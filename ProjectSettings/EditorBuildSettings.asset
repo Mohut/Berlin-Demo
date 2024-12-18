@@ -14,8 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Production/CubeTracking.unity
     guid: 7d6b93576cd52924a9591b0bc31a8cba
-  - enabled: 1
-    path: Assets/Scenes/Production/PointCloud.unity
+  - enabled: 0
+    path: Assets/Scenes/PointCloudAnchor.unity
     guid: 632829ed12f67244ab50daec4d9f2440
   - enabled: 1
     path: Assets/Scenes/Production/ObjectDetection.unity
